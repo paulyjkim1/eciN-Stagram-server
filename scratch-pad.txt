@@ -1,0 +1,9 @@
+User model
+sequelize model:create --name user --attributes username:string,email:string,password:string
+
+Post model
+sequelize model:create --name post --attributes userId:integer,image:string,caption:string
+
+Comment model
+sequelize model:create --name comment --attributes postId:integer,content:string
+
