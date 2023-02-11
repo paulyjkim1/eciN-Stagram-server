@@ -2,29 +2,37 @@ const express = require('express')
 const db = require('../models')
 const router = express.Router()
 
+// POST /post
 router.post('/:id/comments', async (req, res) => {
     try {
         const createComment = await db.comment.create({
             // userId will be hidden input
             userId: req.body.userId,
-            content
+            postId: req.body.postId,
+            content: req.body.content
         })
     } catch (err) {
         console.warm(err)
     }
 })
 
+// PUT /post
 router.put('/:id/comments/:idx', async (req, res) => {
     try {
-
+        const editComment = await db.comment.findByPk(req.params.idx)
+        await editComment.update({
+            content: req.body.content
+        })
     } catch (err) {
         console.warm(err)
     }
 })
 
+// DELETE /post
 router.delete('/:id/comments/:idx', async (req, res) => {
     try {
-
+        const deleteComment = await db.comment.findByPk(req.params.idx)
+        deleteComment.destroy()
     } catch (err) {
         console.warm(err)
     }
