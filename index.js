@@ -7,8 +7,6 @@ const LocalStrategy = require('passport-local').Strategy
 const session = require('express-session')
 const bcrypt = require('bcrypt')
 
-
-
 const PORT = process.env.PORT || 8000
 const app = express()
 app.use(express.urlencoded({ extended: false }))
