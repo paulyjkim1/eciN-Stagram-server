@@ -1,32 +1,20 @@
 // Setting up imports
+require('dotenv').config()
 const express = require('express')
 const db = require('./models')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const session = require('express-session')
 const bcrypt = require('bcrypt')
-const saltRounds = 10
 
-bcrypt.hash(password, saltRounds, function (err, hash) {
-    if (err) {
-        console.error(err)
-        return
-    }
-
-    const query = 'INSERT INTO users (email, password) VALUES ($3, $4)'
-    const VALUES = [email, hash]
-
-    db.user.query(query, VALUES, (err) => {
-        if (err) {
-            console.error(err)
-            return
-        }
-    })
-})
+const PORT = process.env.PORT || 8000
+const app = express()
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
 
 // setup of session data
 app.use(session({
-    secret: process.env.SECRET,
+    secret: 'secret',
     resave: false,
     saveUninitialized: false
 }))
@@ -40,36 +28,18 @@ passport.use(new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password'
 }, (email, password, done) => {
-    const query = 'SELECT * FROM users WHERE email = $3'
-    const VALUES = [email]
-
-    db.query(query, VALUES, (err, result) => {
+    db.user.findOne({ email: email }, (err, user) => {
         if (err) { return done(err) }
-        if (result.rows.length === 0) { return done(null, false, { message: 'wrong email retard' }) }
-    })
+        if (!user) { return done(null, false, { message: 'Incorrect Email or Password' }) }
 
-    const user = result.rows[0]
-
-    bcrypt.compare(password, user.password, (err, isMatch) => {
-        if (err) { return done(err) }
-        if (!isMatch) { return done(null, false, { message: 'wrong password retard' }) }
-        return done(null, user)
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+            if (err) { return done(err) }
+            if (!isMatch) { return done(null, false, { message: 'Incorrect Email or Password' }) }
+            return done(null, user)
+        })
     })
 })
 )
-
-// db.user.findOne({ email: email, password: password }, (err, user) => {
-//     if (err) { return done(err) }
-//     if (!user) { return done(null, false, { message: 'Incorrect Email or Password' }) }
-
-//     bcrypt.compare(password, user.password, (err, isMatch) => {
-//         if (err) { return done(err) }
-//         if (!isMatch) { return done(null, false, { message: 'Incorrect Email or Password' }) }
-//         return done(null, user)
-
-//     })
-// }))
-
 // de/serialization of user
 passport.serializeUser((user, done) => {
     done(null, user.id)
@@ -102,4 +72,13 @@ function authRoute(req, res, next) {
 
 app.get('/', authRoute, (req, res) => {
     res.send('home', { user: req.user })
+})
+
+
+app.use('/users', require('./controllers/users'))
+app.use('/posts', require('./controllers/posts'))
+
+
+app.listen(PORT, () => {
+    console.log(PORT, 'HANDS IN THE AYERRRRR')
 })
