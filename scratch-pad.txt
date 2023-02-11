@@ -5,5 +5,5 @@ Post model
 sequelize model:create --name post --attributes userId:integer,image:string,caption:string
 
 Comment model
-sequelize model:create --name comment --attributes postId:integer,content:string
+sequelize model:create --name comment --attributes userId:integer,postId:integer,content:string
 
