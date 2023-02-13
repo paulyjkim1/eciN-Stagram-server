@@ -2,6 +2,20 @@ const express = require('express')
 const db = require('../models')
 const router = express.Router()
 
+
+// GET /posts
+router.get('/:id/comments', async (req, res) => {
+    try {
+        const postDet = await db.post.findByPk(req.params.id)
+        const findComment = await db.comment.findAll({
+            where: { postId: req.params.id }
+        })
+        res.json(postDet)
+    } catch (err) {
+        console.warn(err)
+    }
+})
+
 // POST /post
 router.post('/:id/comments', async (req, res) => {
     try {
@@ -39,29 +53,19 @@ router.delete('/:id/comments/:idx', async (req, res) => {
 })
 
 // GET /posts
-router.get('/', async (req, res) => {
+router.get('/:id', async (req, res) => {
     try {
-        const posts = await db.post.find({
-            include: [db.user]
+        const foundUser = await db.user.findOne({
+            where: {id: req.params.id},
+            include: [db.post]
         })
-        res.json(posts)
+
+        res.json(foundUser)
     } catch (err) {
         console.warn(err)
     }
 })
 
-// GET /posts
-router.get('/:id', async (req, res) => {
-    try {
-        const postDet = await db.post.findByPk(req.params.id)
-        const findComment = await db.comment.findAll({
-            where: { postId: req.params.id }
-        })
-        res.json(postDet)
-    } catch (err) {
-        console.warn(err)
-    }
-})
 
 // POST /posts
 router.post('/', async (req, res) => {
