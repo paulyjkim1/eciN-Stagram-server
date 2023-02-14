@@ -1,7 +1,8 @@
 const express = require('express')
 const db = require('../models')
 const router = express.Router()
-
+const multer = require('multer')
+const cors = require('cors')
 
 // GET /posts
 router.get('/:id/comments', async (req, res) => {
@@ -68,18 +69,39 @@ router.get('/:id', async (req, res) => {
 
 
 // POST /posts
-router.post('/', async (req, res) => {
-    try {
-        const createPost = await db.post.create({
-            // depends on auth
-            userId: req.body.userId,
-            image: req.body.image,
-            caption: req.body.caption
-        })
-        res.json(createPost)
-    } catch (err) {
-        console.warm(err)
+// router.post('/', async (req, res) => {
+//     try {
+//         const createPost = await db.post.create({
+//             // depends on auth
+//             userId: req.body.userId,
+//             image: req.body.image,
+//             caption: req.body.caption
+//         })
+//         res.json(createPost)
+//     } catch (err) {
+//         console.warm(err)
+//     }
+// })
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public')
+    },
+    filename: (req, file, cb) => {
+        cb(null, Data.now() + '-' + file.originalname)
     }
+})
+
+// array to send multi file in the end
+const upload = multer({storage}).single('file')
+
+router.post('/upload', async (req, res) => {
+    upload( req, res, (err) => {
+        if (err) {
+            return res.status(500).json(err)
+        }
+        return res.status(200).send(req.files)
+    })
 })
 
 // DELETE /posts
