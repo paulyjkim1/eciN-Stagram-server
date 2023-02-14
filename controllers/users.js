@@ -55,11 +55,11 @@ router.post('/register', async (req, res) => {
         const password = req.body.password
         const saltRounds = 12;
         const hashedPassword = await bcrypt.hash(password, saltRounds)
-
+        console.log(hashedPassword)
         // create new user
 
         const newUser = db.user.create({
-            name: req.body.name,
+            username: req.body.username,
             email: req.body.email,
             password: hashedPassword
         })
@@ -68,13 +68,14 @@ router.post('/register', async (req, res) => {
 
         // create jwt payload
         const payload = {
-            name: newUser.name,
+            username: newUser.username,
             email: newUser.email,
             id: newUser.id
         }
 
         // sign jwt and send back
         const token = await jwt.sign(payload, process.env.JWT_SECRET)
+        // console.log(token)
         res.status(200).json({ token })
     } catch (error) {
         console.log(error)
@@ -104,7 +105,7 @@ router.post('/login', async (req, res) => {
 
         // create jwt payload
         const payload = {
-            name: foundUser.name,
+            username: foundUser.username,
             email: foundUser.email,
             id: foundUser.id
         }
