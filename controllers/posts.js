@@ -6,11 +6,12 @@ const router = express.Router()
 // GET /posts
 router.get('/:id/comments', async (req, res) => {
     try {
-        const postDet = await db.post.findByPk(req.params.id)
+        // const postDet = await db.post.findByPk(req.params.id)
         const findComment = await db.comment.findAll({
-            where: { postId: req.params.id }
+            where: { postId: req.params.id },
+            include:[db.user, db.post]
         })
-        res.json(postDet)
+        res.json(findComment)
     } catch (err) {
         console.warn(err)
     }
