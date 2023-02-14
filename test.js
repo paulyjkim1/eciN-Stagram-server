@@ -14,16 +14,16 @@ const db = require('./models')
 //     }
 // }
 // postCrud()
-const postCrud = async function () {
-    try {
+// const postCrud = async function () {
+//     try {
 
-        const newPost = await db.post.create({
-            userId: 1,
-            image: 'image2',
-            caption: 'caption2'
-        })
-    } catch (err) {
-        console.log(err)
-    }
-}
-postCrud()
+//         const newPost = await db.post.create({
+//             userId: 1,
+//             image: 'image2',
+//             caption: 'caption2'
+//         })
+//     } catch (err) {
+//         console.log(err)
+//     }
+// }
+// postCrud()
