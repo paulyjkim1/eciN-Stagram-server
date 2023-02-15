@@ -37,7 +37,7 @@ router.post('/:id/comments', async (req, res) => {
             content: req.body.content
         })
     } catch (err) {
-        console.warm(err)
+        console.warn(err)
     }
 })
 
@@ -49,7 +49,7 @@ router.put('/:id/comments/:idx', async (req, res) => {
             content: req.body.content
         })
     } catch (err) {
-        console.warm(err)
+        console.warn(err)
     }
 })
 
@@ -59,7 +59,7 @@ router.delete('/:id/comments/:idx', async (req, res) => {
         const deleteComment = await db.comment.findByPk(req.params.idx)
         deleteComment.destroy()
     } catch (err) {
-        console.warm(err)
+        console.warn(err)
     }
 })
 
@@ -81,10 +81,13 @@ router.get('/:id', async (req, res) => {
 
 // POST /posts
 router.post('/', upload.single('image'), async (req, res) => {
+    console.log(req.body)
     const userId = req.body.userId
     const caption = req.body.caption
-
+    // console.log(userId)
+    // console.log(caption)
     try {
+        console.log(req.file)
         const result = await cloudinary.uploader.upload(req.file.path)
         cloudinary.image(`${req.file.path}`)
         const imageUrl = result.secure_url
@@ -96,31 +99,9 @@ router.post('/', upload.single('image'), async (req, res) => {
         })
         res.json(createPost)
     } catch (err) {
-        console.warm(err)
+        console.warn(err)
     }
 })
-// --------
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         cb(null, 'public')
-//     },
-//     filename: (req, file, cb) => {
-//         cb(null, Data.now() + '-' + file.originalname)
-//     }
-// })
-
-// // // array to send multi file in the end
-// const upload = multer({storage}).single('file')
-
-// router.post('/', async (req, res) => {
-//     upload( req, res, (err) => {
-//         if (err) {
-//             return res.status(500).json(err)
-//         }
-//         return res.status(200).send(req.files)
-//     })
-// })
-// --------
 
 // DELETE /posts
 router.delete('/:id', async (req, res) => {
