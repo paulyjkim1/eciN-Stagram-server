@@ -84,10 +84,11 @@ router.post('/', upload.single('image'), async (req, res) => {
     console.log(req.body)
     const userId = req.body.userId
     const caption = req.body.caption
+    console.log(`this is reqbody console.log ${userId}`)
+    console.log(caption)
     // console.log(userId)
     // console.log(caption)
     try {
-        console.log(req.file)
         const result = await cloudinary.uploader.upload(req.file.path)
         cloudinary.image(`${req.file.path}`)
         const imageUrl = result.secure_url
