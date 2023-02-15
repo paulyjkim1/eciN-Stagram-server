@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       models.post.hasMany(models.comment)
       models.post.belongsTo(models.user)
+
     }
   }
   post.init({

@@ -1,5 +1,5 @@
 User model
-sequelize model:create --name user --attributes username:string,email:string,password:string
+sequelize model:create --name user --attributes username:string,email:string,password:string,followers:array:integer,following:array:integer
 
 Post model
 sequelize model:create --name post --attributes userId:integer,image:string,caption:string
@@ -7,3 +7,13 @@ sequelize model:create --name post --attributes userId:integer,image:string,capt
 Comment model
 sequelize model:create --name comment --attributes userId:integer,postId:integer,content:string
 
+
+
+models.comment.belongsTo(models.user)
+models.comment.belongsTo(models.post)
+
+models.post.hasMany(models.comment)
+      models.post.belongsTo(models.user)
+
+models.user.hasMany(models.post)
+      models.user.hasMany(models.comment)
