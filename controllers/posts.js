@@ -84,10 +84,7 @@ router.post('/', upload.single('image'), async (req, res) => {
     console.log(req.body)
     const userId = req.body.userId
     const caption = req.body.caption
-    console.log(`this is reqbody console.log ${userId}`)
-    console.log(caption)
-    // console.log(userId)
-    // console.log(caption)
+    // console.log(`this is reqbody userId console.log ${userId}`)
     try {
         const result = await cloudinary.uploader.upload(req.file.path)
         cloudinary.image(`${req.file.path}`)
