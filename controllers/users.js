@@ -5,39 +5,6 @@ const bcrypt = require('bcrypt')
 const authLockedRoute = require('./authLockedRoute')
 const jwt = require('jsonwebtoken')
 
-// router.post('/register', async (req, res) => {
-//     try {
-//         console.log(req.body)
-//         const [newUser, created] = await db.user.findOrCreate({
-//             where: {
-//                 username: req.body.username,
-//                 email: req.body.email,
-//             }
-//         })
-
-//         if (!created) {
-//             return res.status(400).json({ msg: 'This user exists already' })
-//         }
-
-//         else {
-//             const hashed = bcrypt.hashSync(req.body.password, 12)
-//             newUser.password = hashed
-//             await newUser.save()
-//         }
-//     } catch (err) {
-//         console.log(err)
-//     }
-
-// })
-router.get('/thissucks', async function (req, res) {
-    try {
-        console.log(`gimme the fuckin req.body`)
-
-    } catch (err) {
-        console.log(err)
-    }
-})
-
 router.post('/register', async (req, res) => {
     try {
         console.log(req.body)
@@ -58,19 +25,18 @@ router.post('/register', async (req, res) => {
         console.log(hashedPassword)
         // create new user
 
-        const newUser = db.user.create({
+        const newUser = await db.user.create({
             username: req.body.username,
             email: req.body.email,
-            password: hashedPassword
+            password: hashedPassword,
         })
 
-        // await newUser.save()
 
         // create jwt payload
         const payload = {
             username: req.body.username,
             email: req.body.email,
-            id: req.body.id
+            id: newUser.id
         }
 
         // sign jwt and send back
