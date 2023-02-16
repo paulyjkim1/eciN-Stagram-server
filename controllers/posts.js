@@ -26,8 +26,9 @@ router.post('/:id/comments', async (req, res) => {
             postId: req.body.postId,
             content: req.body.content
         })
+        res.json(createComment)
     } catch (err) {
-        console.warm(err)
+        console.warn(err)
     }
 })
 
@@ -39,7 +40,7 @@ router.put('/:id/comments/:idx', async (req, res) => {
             content: req.body.content
         })
     } catch (err) {
-        console.warm(err)
+        console.warn(err)
     }
 })
 
@@ -48,8 +49,9 @@ router.delete('/:id/comments/:idx', async (req, res) => {
     try {
         const deleteComment = await db.comment.findByPk(req.params.idx)
         deleteComment.destroy()
+        res.json('deleted')
     } catch (err) {
-        console.warm(err)
+        console.warn(err)
     }
 })
 
@@ -79,7 +81,7 @@ router.post('/', async (req, res) => {
         })
         res.json(createPost)
     } catch (err) {
-        console.warm(err)
+        console.warn(err)
     }
 })
 
@@ -89,7 +91,7 @@ router.delete('/:id', async (req, res) => {
         const deletePost = await db.post.findByPk(req.params.id)
         deletePost.destroy()
     } catch (err) {
-        console.warm(err)
+        console.warn(err)
     }
 })
 module.exports = router
