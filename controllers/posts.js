@@ -81,18 +81,21 @@ router.get('/:id', async (req, res) => {
 // POST /posts
 router.post('/images', upload.single('image'), async (req, res) => {
     if (!req.file) return res.status(400).json({ msg: 'no file uploaded!' })
-    console.log(req.body)
-    // const cloudImageData = await cloudinary.uploader.upload(req.file.path)
-    // // console.log(cloudImageData)
-    // const cloudinaryUrl = `https://res.cloudinary.com/dfmyqdv8d/image/upload/v1593119998/${cloudImageData.public_id}.png;`
-    // unlinkSync(req.file.path)
-    // try {
-    //     const uploadPost = await db.post.create({
-    //         image: cloudinaryUrl
-    //     })
-    // } catch (err) {
-    //     console.log(err)
-    // }
+    // console.log(req.body.userId)
+    // console.log(req.file.path)
+    const cloudImageData = await cloudinary.uploader.upload(req.file.path)
+    console.log(cloudImageData)
+    const cloudinaryUrl = `https://res.cloudinary.com/dfmyqdv8d/image/upload/v1593119998/${cloudImageData.public_id}.png;`
+    unlinkSync(req.file.path)
+    try {
+        const uploadPost = await db.post.create({
+            userId: req.body.userId,
+            image: cloudinaryUrl,
+            caption: req.body.caption
+        })
+    } catch (err) {
+        console.log(err)
+    }
 })
 
 // DELETE /posts
