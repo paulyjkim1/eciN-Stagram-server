@@ -87,7 +87,7 @@ router.post('/images', upload.single('image'), async (req, res) => {
     // console.log(req.file.path)
     const cloudImageData = await cloudinary.uploader.upload(req.file.path)
     console.log(cloudImageData)
-    const cloudinaryUrl = `https://res.cloudinary.com/dfmyqdv8d/image/upload/v1593119998/${cloudImageData.public_id}.png;`
+    const cloudinaryUrl = cloudImageData.secure_url
     unlinkSync(req.file.path)
     try {
         const uploadPost = await db.post.create({
