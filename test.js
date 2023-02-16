@@ -28,14 +28,13 @@ const postCrud = async function () {
     }
 }
 postCrud()
-
 // const postCrud = async function () {
 //     try {
 
-//         const newPost = await db.comment.create({
+//         const newPost = await db.post.create({
 //             userId: 1,
-//             postId: 1,
-//             content: 'comment2'
+//             image: 'image2',
+//             caption: 'caption2'
 //         })
 //     } catch (err) {
 //         console.log(err)
