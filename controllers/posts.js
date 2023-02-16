@@ -2,14 +2,14 @@ const express = require('express')
 const db = require('../models')
 const router = express.Router()
 const multer = require('multer')
-const cors = require('cors')
+const { unlinkSync } = require('fs')
 const cloudinary = require('cloudinary').v2;
 
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
     api_key: process.env.API_KEY,
     api_secret: process.env.API_SECRET
-  });
+});
 
 const upload = multer({dest:'uploads/'})
 
@@ -78,27 +78,21 @@ router.get('/:id', async (req, res) => {
 })
 
 
-
 // POST /posts
-router.post('/', upload.single('image'), async (req, res) => {
+router.post('/images', upload.single('image'), async (req, res) => {
+    if (!req.file) return res.status(400).json({ msg: 'no file uploaded!' })
     console.log(req.body)
-    const userId = req.body.userId
-    const caption = req.body.caption
-    // console.log(`this is reqbody userId console.log ${userId}`)
-    try {
-        const result = await cloudinary.uploader.upload(req.file.path)
-        cloudinary.image(`${req.file.path}`)
-        const imageUrl = result.secure_url
-
-        const createPost = await db.post.create({
-            userId: userId,
-            caption: caption,
-            image: imageUrl
-        })
-        res.json(createPost)
-    } catch (err) {
-        console.warn(err)
-    }
+    // const cloudImageData = await cloudinary.uploader.upload(req.file.path)
+    // // console.log(cloudImageData)
+    // const cloudinaryUrl = `https://res.cloudinary.com/dfmyqdv8d/image/upload/v1593119998/${cloudImageData.public_id}.png;`
+    // unlinkSync(req.file.path)
+    // try {
+    //     const uploadPost = await db.post.create({
+    //         image: cloudinaryUrl
+    //     })
+    // } catch (err) {
+    //     console.log(err)
+    // }
 })
 
 // DELETE /posts
