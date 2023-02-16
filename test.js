@@ -19,9 +19,9 @@ const postCrud = async function () {
     try {
 
         const newPost = await db.post.create({
-            userId: 1,
-            image: 'image4',
-            caption: 'caption4'
+            userId: 2,
+            image: 'image7',
+            caption: 'caption7'
         })
     } catch (err) {
         console.log(err)
