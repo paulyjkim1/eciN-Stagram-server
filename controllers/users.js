@@ -36,7 +36,9 @@ router.post('/register', async (req, res) => {
         const payload = {
             username: req.body.username,
             email: req.body.email,
-            id: newUser.id
+            id: newUser.id,
+            followers: newUser.followers,
+            following: newUser.following
         }
 
         // sign jwt and send back
@@ -74,7 +76,9 @@ router.post('/login', async (req, res) => {
         const payload = {
             username: foundUser.username,
             email: foundUser.email,
-            id: foundUser.id
+            id: foundUser.id,
+            followers: foundUser.followers,
+            following: foundUser.following
         }
 
         // sign jwt and send back
@@ -90,6 +94,39 @@ router.post('/login', async (req, res) => {
 router.get('/auth-locked', authLockedRoute, (req, res) => {
     // we know that if we made it here, hte res.locals contains an authorized user
     res.json({ msg: 'welcome to the private route!' })
+})
+
+router.post('/:id/follow', async function (req, res) {
+    try {
+        const user = await db.user.findByPk(req.body.userId)
+
+        if (user.following === null) {
+            user.following = [req.body.userId]
+        }
+        else if (user.following.includes(req.body.followerId)) {
+            user.following = user.following
+        }
+        else user.following = [...user.following, req.body.followerId]
+        await user.save()
+        
+
+
+        const willFollow = await db.user.findByPk(req.body.followerId)
+        if (willFollow.followers === null) {
+            willFollow.followers = [req.body.userId]
+        }
+        else if (willFollow.followers.includes(req.body.userId)) {
+            willFollow.followers = willFollow.followers
+        }
+        else willFollow.followers = [...willFollow.followers, req.body.userId]
+        await willFollow.save()
+
+
+        return res.status(200).json({ msg: 'Keep being nice!!' })
+
+    } catch (err) {
+        console.log(err)
+    }
 })
 
 module.exports = router
