@@ -95,6 +95,7 @@ router.post('/images', upload.single('image'), async (req, res) => {
             image: cloudinaryUrl,
             caption: req.body.caption
         })
+        res.json(uploadPost)
     } catch (err) {
         console.log(err)
     }
