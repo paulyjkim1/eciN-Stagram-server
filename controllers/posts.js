@@ -14,6 +14,18 @@ cloudinary.config({
 const upload = multer({dest:'uploads/'})
 
 // GET /posts
+
+router.get('/', async (req, res) => {
+    try {
+        const allPosts = await db.post.findAll({
+            include: [db.user]
+        })
+        res.json(allPosts)
+    } catch (err) {
+        console.warn(err)
+    }
+})
+
 router.get('/:id/comments', async (req, res) => {
     try {
         // const postDet = await db.post.findByPk(req.params.id)
